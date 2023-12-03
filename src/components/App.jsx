@@ -5,13 +5,11 @@ import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
 import Modal from './Modal/Modal';
-import Error from './Error/Error';
 import Notiflix from 'notiflix';
 
 const App = () => {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
-  const [error, setError] = useState('');
   const [images, setImages] = useState(null);
   const [currentImage, setCurrentImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,14 +18,13 @@ const App = () => {
 
   useEffect(() => {
     if (query) {
-      const handleImages = async (query, page) => {
+      const handleImages = async () => {
         setIsLoading(true);
         try {
           const data = await getImages(query, page);
           if (data.hits.length) {
-            images && setImages(prev => [...prev, ...data.hits]);
+            setImages(prev => [...prev, ...data.hits]);
             setLoadMore(page < Math.ceil(data.totalHits / 12));
-            setError('');
           } else {
             setLoadMore(false);
             Notiflix.Notify.info(
@@ -35,13 +32,21 @@ const App = () => {
             );
           }
         } catch (error) {
-          setError(error.message);
+          Notiflix.Notify.failure(
+            'Oops! Something went wrong! Please refresh the page and try again',
+            {
+              position: 'center-center',
+              timeout: 2000,
+              width: '500px',
+              fontSize: '18px',
+            }
+          );
         } finally {
           setIsLoading(false);
         }
       };
 
-      handleImages(query, page);
+      handleImages();
     }
   }, [query, page]);
 
@@ -49,7 +54,6 @@ const App = () => {
     setQuery(query);
     setImages([]);
     setPage(1);
-    setError('');
     setIsLoading(false);
     setIsShowModal(false);
     setLoadMore(false);
@@ -71,20 +75,12 @@ const App = () => {
 
   return (
     <>
-      {error ? (
-        <Error error={error} />
-      ) : (
-        <>
-          {<Searchbar submit={handleSubmit} />}
-          {isLoading && <Loader />}
-          {images && (
-            <ImageGallery images={images} onItemClick={handleOpenModal} />
-          )}
-          {!isLoading && loadMore && <Button onClick={handleLoadMore} />}
-          {isShowModal && (
-            <Modal close={handleCloseModal} image={currentImage}></Modal>
-          )}
-        </>
+      {<Searchbar submit={handleSubmit} />}
+      {isLoading && <Loader />}
+      {images && <ImageGallery images={images} onItemClick={handleOpenModal} />}
+      {!isLoading && loadMore && <Button onClick={handleLoadMore} />}
+      {isShowModal && (
+        <Modal close={handleCloseModal} image={currentImage}></Modal>
       )}
     </>
   );

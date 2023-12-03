@@ -5,13 +5,14 @@ const Modal = ({ image, close }) => {
   const backDropClose = e => {
     e.target === e.currentTarget && close();
   };
-  const handleEsc = e => {
-    e.code === 'Escape' && close();
-  };
+
   useEffect(() => {
+    const handleEsc = e => {
+      e.code === 'Escape' && close();
+    };
     document.addEventListener('keydown', handleEsc);
     return () => document.removeEventListener('keydown', handleEsc);
-  }, []);
+  }, [close]);
 
   return (
     image && (
