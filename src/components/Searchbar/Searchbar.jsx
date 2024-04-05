@@ -11,19 +11,15 @@ const Searchbar = ({ submit }) => {
     <header>
       <form onSubmit={handleSubmit} className={CSS.searchbar}>
         <label htmlFor="searchInput"></label>
-        <div className={CSS.divInput}>
-          <input
-            name="query"
-            type="text"
-            id="searchInput"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-          />
-        </div>
-        <button type="submit">
-          <span className={CSS.buttonLabel}>Search</span>
-        </button>
+        <input
+          name="query"
+          type="text"
+          id="searchInput"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+        />
+        <button type="submit">Search</button>
       </form>
     </header>
   );

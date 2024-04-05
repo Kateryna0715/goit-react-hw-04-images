@@ -74,7 +74,7 @@ const App = () => {
   };
 
   return (
-    <>
+    <div style={{ padding: '0 15px', margin: '0 auto' }}>
       {<Searchbar submit={handleSubmit} />}
       {isLoading && <Loader />}
       {images && <ImageGallery images={images} onItemClick={handleOpenModal} />}
@@ -82,7 +82,7 @@ const App = () => {
       {isShowModal && (
         <Modal close={handleCloseModal} image={currentImage}></Modal>
       )}
-    </>
+    </div>
   );
 };
 
